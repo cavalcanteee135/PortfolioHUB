@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VidaSaúde | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ================= CORES ================= */
+    :root {
+      --verde-escuro: #0f5132;
+      --verde: #16a34a;
+      --verde-medio: #22c55e;
+      --verde-claro: #dcfce7;
+      --verde-agua: #ecfdf5;
+      --branco: #ffffff;
+      --texto: #1e293b;
+      --texto-claro: #64748b;
+      --borda: #d1e7dd;
+      --erro: #dc2626;
+      --sombra: 0 25px 60px rgba(15, 81, 50, 0.18);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      color: var(--texto);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 16px;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(34, 197, 94, 0.18) 0, transparent 35%),
+        radial-gradient(circle at 90% 80%, rgba(22, 163, 74, 0.15) 0, transparent 35%),
+        var(--verde-agua);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Cruzes decorativas no fundo */
+    .cruz-fundo {
+      position: fixed;
+      color: rgba(22, 163, 74, 0.12);
+      font-size: 60px;
+      font-weight: 700;
+      z-index: 0;
+      animation: flutuar 6s ease-in-out infinite;
+    }
+    .cruz-fundo.c1 { top: 8%;  left: 6%; }
+    .cruz-fundo.c2 { bottom: 10%; left: 12%; font-size: 40px; animation-delay: 1s; }
+    .cruz-fundo.c3 { top: 12%; right: 8%; font-size: 46px; animation-delay: 2s; }
+    .cruz-fundo.c4 { bottom: 6%; right: 5%; animation-delay: 3s; }
+
+    @keyframes flutuar {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-14px); }
+    }
+
+    /* ================= CONTAINER ================= */
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      width: 100%;
+      max-width: 1050px;
+      min-height: 640px;
+      background: var(--branco);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+    }
+
+    /* ================= LADO DA IMAGEM ================= */
+    .lado-imagem {
+      flex: 1;
+      position: relative;
+      background-color: var(--verde);
+      background-image: url("https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=900&q=80");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .overlay {
+      height: 100%;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--branco);
+      background: linear-gradient(160deg,
+        rgba(15, 81, 50, 0.92) 0%,
+        rgba(22, 163, 74, 0.80) 55%,
+        rgba(34, 197, 94, 0.70) 100%);
+    }
+
+    .logo { display: flex; align-items: center; gap: 12px; font-size: 1.5rem; font-weight: 700; }
+    .logo-icone {
+      width: 46px; height: 46px;
+      display: grid; place-items: center;
+      background: var(--branco);
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .texto-imagem h1 { font-size: 2.1rem; line-height: 1.2; margin-bottom: 12px; }
+    .texto-imagem p  { font-weight: 300; opacity: 0.95; }
+
+    /* Linha de batimento cardíaco animada */
+    .batimento { width: 100%; height: 60px; margin: 20px 0; }
+    .batimento path {
+      fill: none;
+      stroke: var(--branco);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      animation: pulso 3s linear infinite;
+    }
+    @keyframes pulso { to { stroke-dashoffset: 0; } }
+
+    .cards-saude { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card-saude {
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 0.78rem;
+      transition: transform 0.3s;
+    }
+    .card-saude:hover { transform: translateY(-4px); }
+    .card-saude svg { width: 30px; height: 30px; margin-bottom: 6px; }
+    .card-saude strong { display: block; font-size: 1.1rem; }
+
+    /* ================= LADO DO FORMULÁRIO ================= */
+    .lado-form {
+      flex: 1.1;
+      padding: 40px 45px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Abas Entrar / Cadastrar */
+    .abas {
+      position: relative;
+      display: flex;
+      background: var(--verde-agua);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 5px;
+      margin-bottom: 26px;
+    }
+    .aba {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      border: none;
+      background: none;
+      padding: 11px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--texto-claro);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .aba.ativa { color: var(--branco); }
+    .indicador {
+      position: absolute;
+      top: 5px; left: 5px;
+      width: calc(50% - 5px);
+      height: calc(100% - 10px);
+      background: linear-gradient(135deg, var(--verde), var(--verde-medio));
+      border-radius: 10px;
+      box-shadow: 0 6px 14px rgba(22, 163, 74, 0.35);
+      transition: transform 0.35s ease;
+    }
+    .abas.cadastro .indicador { transform: translateX(100%); }
+
+    .titulo h2 { font-size: 1.7rem; color: var(--verde-escuro); }
+    .titulo p  { color: var(--texto-claro); font-size: 0.92rem; margin-bottom: 22px; }
+
+    .formulario { display: none; animation: aparecer 0.4s ease; }
+    .formulario.ativo { display: block; }
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grade organizada dos campos */
+    .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+    .inteiro { grid-column: 1 / -1; }
+
+    .campo { margin-bottom: 14px; }
+    .campo label { display: block; font-size: 0.82rem; font-weight: 500; margin-bottom: 6px; }
+
+    .input-icone { position: relative; }
+    .input-icone svg {
+      position: absolute;
+      left: 13px; top: 50%;
+      transform: translateY(-50%);
+      width: 18px; height: 18px;
+      stroke: var(--verde);
+      pointer-events: none;
+    }
+    .input-icone input {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.92rem;
+      padding: 12px 14px 12px 42px;
+      border: 1.5px solid var(--borda);
+      border-radius: 12px;
+      background: #f7fdf9;
+      color: var(--texto);
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+    .input-icone input:focus {
+      border-color: var(--verde-medio);
+      background: var(--branco);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+    }
+    .input-icone input.invalido { border-color: var(--erro); }
+
+    .ver-senha {
+      position: absolute;
+      right: 10px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--verde);
+      font-family: inherit;
+    }
+
+    .opcoes {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.83rem;
+      margin: 4px 0 22px;
+    }
+    .check { display: flex; align-items: center; gap: 8px; color: var(--texto-claro); cursor: pointer; font-size: 0.83rem; }
+    .check input { accent-color: var(--verde); width: 16px; height: 16px; }
+
+    a, .link {
+      color: var(--verde);
+      font-weight: 600;
+      text-decoration: none;
+      background: none; border: none;
+      font-family: inherit; font-size: inherit;
+      cursor: pointer;
+    }
+    a:hover, .link:hover { text-decoration: underline; }
+
+    .botao {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--branco);
+      background: linear-gradient(135deg, var(--verde) 0%, var(--verde-medio) 100%);
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(22, 163, 74, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .botao:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(22, 163, 74, 0.45); }
+    .botao.secundario {
+      background: var(--branco);
+      color: var(--verde);
+      border: 1.5px solid var(--verde);
+      box-shadow: none;
+      margin-top: 12px;
+    }
+
+    .rodape-form { text-align: center; margin-top: 18px; font-size: 0.88rem; color: var(--texto-claro); }
+
+    .mensagem {
+      display: none;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+    .mensagem.erro    { display: block; background: #fee2e2; color: var(--erro); }
+    .mensagem.sucesso { display: block; background: var(--verde-claro); color: var(--verde-escuro); }
+
+    /* ================= ÁREA DE AGENDAMENTO (após login) ================= */
+    .app { display: none; flex: 1; flex-direction: column; background: #f7fdf9; min-width: 0; }
+    .container.logado { max-width: 1150px; }
+    .container.logado .lado-imagem,
+    .container.logado .lado-form { display: none; }
+    .container.logado .app { display: flex; }
+
+    /* Topo */
+    .topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 32px;
+      color: var(--branco);
+      background: linear-gradient(135deg, var(--verde-escuro), var(--verde));
+    }
+    .topo .logo { font-size: 1.3rem; }
+    .topo .logo-icone { width: 40px; height: 40px; }
+    .usuario { display: flex; align-items: center; gap: 12px; font-size: 0.92rem; }
+    .usuario small { display: block; opacity: 0.85; font-size: 0.75rem; }
+    .avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--branco);
+      color: var(--verde);
+      font-size: 1.1rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .btn-sair {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: var(--branco);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-sair:hover { background: rgba(255, 255, 255, 0.28); }
+
+    /* Menu de abas */
+    .menu {
+      display: flex;
+      gap: 6px;
+      padding: 10px 32px 0;
+      background: var(--branco);
+      border-bottom: 1px solid var(--borda);
+      overflow-x: auto;
+    }
+    .menu button {
+      border: none;
+      background: none;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--texto-claro);
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .menu button.ativo { color: var(--verde); border-bottom-color: var(--verde); }
+    .contador {
+      background: var(--verde);
+      color: var(--branco);
+      border-radius: 20px;
+      padding: 1px 8px;
+      font-size: 0.72rem;
+      margin-left: 4px;
+    }
+
+    .conteudo { padding: 28px 32px; }
+    .aba-app { display: none; animation: aparecer 0.4s ease; }
+    .aba-app.ativa { display: block; }
+    .aba-app > h2 { color: var(--verde-escuro); font-size: 1.4rem; margin-bottom: 16px; }
+
+    /* Etapas do agendamento */
+    .agendar { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+    .etapa {
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      transition: opacity 0.3s;
+    }
+    .etapa.bloqueada { opacity: 0.45; pointer-events: none; }
+    .etapa h3 { display: flex; align-items: center; gap: 10px; font-size: 1rem; color: var(--verde-escuro); margin-bottom: 14px; }
+    .numero {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--verde-claro);
+      color: var(--verde);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .etapa.feita .numero { background: var(--verde); color: var(--branco); }
+    .dica { color: var(--texto-claro); font-size: 0.88rem; grid-column: 1 / -1; }
+
+    /* Botões de escolha (especialidade, médico, dia, horário) */
+    .opcao {
+      border: 1.5px solid var(--borda);
+      background: #f7fdf9;
+      border-radius: 14px;
+      padding: 12px;
+      font-family: inherit;
+      color: var(--texto);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .opcao:hover { border-color: var(--verde-medio); transform: translateY(-2px); }
+    .opcao.selecionada {
+      border-color: var(--verde);
+      background: var(--verde-claro);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+    }
+    .opcao:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      border-color: var(--borda);
+      text-decoration: line-through;
+    }
+    .opcao .emoji { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+    .opcao strong { display: block; font-size: 0.85rem; }
+    .opcao small { display: block; color: var(--texto-claro); font-size: 0.72rem; }
+
+    .lista-especialidades { display: grid; grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); gap: 10px; }
+
+    .lista-medicos { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+    .medico { display: flex; align-items: center; gap: 12px; text-align: left; }
+    .foto-medico {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: grid; place-items: center;
+      color: var(--branco);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--verde), var(--verde-medio));
+      box-shadow: 0 6px 14px rgba(22, 163, 74, 0.3);
+    }
+    .medico strong { font-size: 0.9rem; }
+    .estrela { color: #f59e0b; }
+
+    .lista-datas { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; }
+    .data { min-width: 72px; padding: 10px 8px; }
+    .data small { text-transform: uppercase; }
+    .data strong { font-size: 1.25rem; }
+
+    .lista-horarios { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px; }
+    .hora { padding: 10px 6px; font-weight: 600; font-size: 0.88rem; }
+    .grupo-hora { font-size: 0.8rem; font-weight: 600; color: var(--texto-claro); margin: 4px 0 8px; grid-column: 1 / -1; }
+
+    /* Resumo */
+    .resumo {
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 12px 30px rgba(15, 81, 50, 0.08);
+    }
+    .resumo h3 { color: var(--verde-escuro); margin-bottom: 10px; }
+    .resumo-linha {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px dashed var(--borda);
+      font-size: 0.86rem;
+    }
+    .resumo-linha span { color: var(--texto-claro); }
+    .resumo-linha strong { text-align: right; }
+    .resumo .botao { margin-top: 18px; }
+    .botao:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* Minhas consultas */
+    .consulta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-left: 5px solid var(--verde);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+    .consulta.passada { border-left-color: #94a3b8; opacity: 0.7; }
+    .consulta-data {
+      text-align: center;
+      min-width: 64px;
+      background: var(--verde-claro);
+      color: var(--verde-escuro);
+      border-radius: 12px;
+      padding: 8px;
+    }
+    .consulta-data strong { display: block; font-size: 1.4rem; line-height: 1.1; }
+    .consulta-data small { font-size: 0.7rem; text-transform: uppercase; }
+    .consulta-info { flex: 1; font-size: 0.86rem; color: var(--texto-claro); }
+    .consulta-info strong { display: block; font-size: 0.98rem; color: var(--texto); }
+    .status { display: inline-block; margin-top: 4px; padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; background: var(--verde-claro); color: var(--verde-escuro); }
+    .passada .status { background: #e2e8f0; color: #475569; }
+    .btn-cancelar {
+      border: 1.5px solid #fecaca;
+      background: var(--branco);
+      color: var(--erro);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-cancelar:hover { background: #fee2e2; }
+    .vazio { text-align: center; padding: 40px 20px; color: var(--texto-claro); }
+    .vazio .emoji { font-size: 2.6rem; display: block; margin-bottom: 8px; }
+    .vazio .botao { max-width: 240px; margin-top: 18px; }
+
+    /* Janela de confirmação */
+    .modal-fundo {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(15, 81, 50, 0.45);
+      backdrop-filter: blur(3px);
+    }
+    .modal-fundo.aberto { display: flex; }
+    .modal {
+      background: var(--branco);
+      border-radius: 22px;
+      padding: 32px 28px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      animation: aparecer 0.3s ease;
+    }
+    .check-grande {
+      width: 72px; height: 72px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--verde-claro);
+      font-size: 2rem;
+    }
+    .modal h3 { color: var(--verde-escuro); margin-bottom: 8px; }
+    .modal p { color: var(--texto-claro); font-size: 0.9rem; margin-bottom: 20px; }
+
+    .tabela {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 18px 0 8px;
+      font-size: 0.9rem;
+    }
+    .tabela th, .tabela td { padding: 12px 16px; text-align: left; }
+    .tabela th { width: 40%; background: var(--verde-agua); color: var(--verde-escuro); font-weight: 600; }
+    .tabela tr:not(:last-child) th,
+    .tabela tr:not(:last-child) td { border-bottom: 1px solid var(--borda); }
+
+    /* ================= RESPONSIVO ================= */
+    @media (max-width: 860px) {
+      .container { flex-direction: column; }
+      .lado-imagem { min-height: 300px; }
+      .texto-imagem h1 { font-size: 1.6rem; }
+    }
+    @media (max-width: 520px) {
+      .overlay, .lado-form { padding: 26px 20px; }
+      .grade { grid-template-columns: 1fr; }
+      .cards-saude { display: none; }
+      .opcoes { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+
+    /* Responsivo da área de agendamento */
+    @media (max-width: 900px) {
+      .agendar { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .topo { padding: 14px 16px; }
+      .topo .logo span:last-child, .usuario-texto { display: none; }
+      .menu { padding: 6px 8px 0; }
+      .conteudo { padding: 20px 14px; }
+      .etapa { padding: 16px; }
+      .consulta { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <span class="cruz-fundo c1">✚</span>
+  <span class="cruz-fundo c2">✚</span>
+  <span class="cruz-fundo c3">✚</span>
+  <span class="cruz-fundo c4">✚</span>
+
+  <main class="container">
+
+    <!-- ========== LADO ESQUERDO ========== -->
+    <section class="lado-imagem">
+      <div class="overlay">
+        <div class="logo">
+          <span class="logo-icone">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#16a34a"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z"/></svg>
+          </span>
+          VidaSaúde
+        </div>
+
+        <div class="texto-imagem">
+          <h1>Sua saúde em boas mãos 💚</h1>
+          <p>Agende consultas, acompanhe seus exames e cuide do seu bem-estar em um só lugar.</p>
+
+          <svg class="batimento" viewBox="0 0 400 60" preserveAspectRatio="none">
+            <path d="M0 30 H120 L140 30 L155 8 L170 52 L185 18 L198 30 H260 L272 22 L282 38 L292 30 H400"/>
+          </svg>
+
+          <div class="cards-saude">
+            <div class="card-saude">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              <strong>+30</strong>especialidades
+            </div>
+            <div class="card-saude">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
+              <strong>+120</strong>médicos
+            </div>
+            <div class="card-saude">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <strong>24h</strong>agendamento
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== LADO DIREITO ========== -->
+    <section class="lado-form">
+
+      <!-- Abas -->
+      <div class="abas" id="abas">
+        <span class="indicador"></span>
+        <button class="aba ativa" id="abaLogin" type="button">Entrar</button>
+        <button class="aba" id="abaCadastro" type="button">Cadastrar</button>
+      </div>
+
+      <!-- ===== FORMULÁRIO DE LOGIN ===== -->
+      <form class="formulario ativo" id="formLogin" novalidate>
+        <div class="titulo">
+          <h2>Bem-vindo de volta!</h2>
+          <p>Entre com seus dados para acessar sua conta.</p>
+        </div>
+
+        <div class="mensagem" id="msgLogin"></div>
+
+        <div class="campo">
+          <label for="loginEmail">E-mail</label>
+          <div class="input-icone">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+            <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="loginSenha">Senha</label>
+          <div class="input-icone">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="loginSenha" placeholder="Digite sua senha">
+            <button type="button" class="ver-senha" data-alvo="loginSenha">Mostrar</button>
+          </div>
+        </div>
+
+        <div class="opcoes">
+          <label class="check"><input type="checkbox" id="lembrar"> Lembrar de mim</label>
+          <button type="button" class="link" id="esqueci">Esqueci a senha</button>
+        </div>
+
+        <button type="submit" class="botao">Entrar</button>
+
+        <p class="rodape-form">Ainda não tem conta? <button type="button" class="link" id="irCadastro">Cadastre-se</button></p>
+      </form>
+
+      <!-- ===== FORMULÁRIO DE CADASTRO ===== -->
+      <form class="formulario" id="formCadastro" novalidate>
+        <div class="titulo">
+          <h2>Crie sua conta</h2>
+          <p>Leva menos de 1 minuto. 🌿</p>
+        </div>
+
+        <div class="mensagem" id="msgCadastro"></div>
+
+        <div class="grade">
+          <div class="campo inteiro">
+            <label for="cadNome">Nome completo</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="cadNome" placeholder="Maria da Silva">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadCpf">CPF</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 10h4M6 14h8"/></svg>
+              <input type="text" id="cadCpf" placeholder="000.000.000-00" maxlength="14" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadNascimento">Nascimento</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <input type="date" id="cadNascimento">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadTelefone">Telefone</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+              <input type="tel" id="cadTelefone" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadEmail">E-mail</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+              <input type="email" id="cadEmail" placeholder="seuemail@exemplo.com">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadSenha">Senha</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="cadSenha" placeholder="Mín. 6 caracteres">
+              <button type="button" class="ver-senha" data-alvo="cadSenha">Mostrar</button>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadConfirmar">Confirmar senha</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              <input type="password" id="cadConfirmar" placeholder="Repita a senha">
+            </div>
+          </div>
+        </div>
+
+        <label class="check" style="margin: 6px 0 20px;">
+          <input type="checkbox" id="cadTermos"> Aceito os <a href="#">termos de uso</a>
+        </label>
+
+        <button type="submit" class="botao">Criar conta</button>
+
+        <p class="rodape-form">Já tem conta? <button type="button" class="link" id="irLogin">Entrar</button></p>
+      </form>
+
+    </section>
+
+    <!-- ========== ÁREA DE AGENDAMENTO (aparece depois do login) ========== -->
+    <section class="app" id="app">
+
+      <header class="topo">
+        <div class="logo">
+          <span class="logo-icone">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#16a34a"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z"/></svg>
+          </span>
+          <span>VidaSaúde</span>
+        </div>
+        <div class="usuario">
+          <div class="avatar" id="avatar">M</div>
+          <div class="usuario-texto">
+            <strong id="saudacao">Olá!</strong>
+            <small>Área do paciente</small>
+          </div>
+          <button type="button" class="btn-sair" id="sair">Sair</button>
+        </div>
+      </header>
+
+      <nav class="menu">
+        <button type="button" class="ativo" data-aba="abaAgendar">📅 Agendar consulta</button>
+        <button type="button" data-aba="abaMinhas">🗂️ Minhas consultas <span class="contador" id="contador">0</span></button>
+        <button type="button" data-aba="abaDados">👤 Meus dados</button>
+      </nav>
+
+      <div class="conteudo">
+
+        <!-- ABA: AGENDAR -->
+        <div class="aba-app ativa" id="abaAgendar">
+          <div class="agendar">
+            <div>
+              <div class="etapa" id="etapa1">
+                <h3><span class="numero">1</span> Escolha a especialidade</h3>
+                <div class="lista-especialidades" id="listaEspecialidades"></div>
+              </div>
+
+              <div class="etapa bloqueada" id="etapa2">
+                <h3><span class="numero">2</span> Escolha o médico</h3>
+                <div class="lista-medicos" id="listaMedicos"></div>
+              </div>
+
+              <div class="etapa bloqueada" id="etapa3">
+                <h3><span class="numero">3</span> Escolha o dia</h3>
+                <div class="lista-datas" id="listaDatas"></div>
+              </div>
+
+              <div class="etapa bloqueada" id="etapa4">
+                <h3><span class="numero">4</span> Escolha o horário</h3>
+                <div class="lista-horarios" id="listaHorarios"></div>
+              </div>
+            </div>
+
+            <aside class="resumo">
+              <h3>🩺 Resumo da consulta</h3>
+              <div class="resumo-linha"><span>Especialidade</span><strong id="rEsp">—</strong></div>
+              <div class="resumo-linha"><span>Médico</span><strong id="rMed">—</strong></div>
+              <div class="resumo-linha"><span>Dia</span><strong id="rData">—</strong></div>
+              <div class="resumo-linha"><span>Horário</span><strong id="rHora">—</strong></div>
+              <button type="button" class="botao" id="confirmar" disabled>Confirmar agendamento</button>
+            </aside>
+          </div>
+        </div>
+
+        <!-- ABA: MINHAS CONSULTAS -->
+        <div class="aba-app" id="abaMinhas">
+          <h2>Minhas consultas</h2>
+          <div id="listaConsultas"></div>
+        </div>
+
+        <!-- ABA: MEUS DADOS -->
+        <div class="aba-app" id="abaDados">
+          <h2>Meus dados</h2>
+          <table class="tabela">
+            <tr><th>Nome</th><td id="pNome"></td></tr>
+            <tr><th>CPF</th><td id="pCpf"></td></tr>
+            <tr><th>Nascimento</th><td id="pNascimento"></td></tr>
+            <tr><th>Telefone</th><td id="pTelefone"></td></tr>
+            <tr><th>E-mail</th><td id="pEmail"></td></tr>
+          </table>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Janela de confirmação do agendamento -->
+  <div class="modal-fundo" id="modal">
+    <div class="modal">
+      <div class="check-grande">✅</div>
+      <h3>Consulta agendada!</h3>
+      <p id="modalTexto"></p>
+      <button type="button" class="botao" id="modalVer">Ver minhas consultas</button>
+      <button type="button" class="botao secundario" id="modalFechar">Agendar outra</button>
+    </div>
+  </div>
+
+  <script>
+    /* ================= ARMAZENAMENTO (no navegador) ================= */
+    function lerUsuarios() {
+      try { return JSON.parse(localStorage.getItem("vs_usuarios")) || []; }
+      catch (e) { return []; }
+    }
+    function salvarUsuarios(lista) {
+      try { localStorage.setItem("vs_usuarios", JSON.stringify(lista)); } catch (e) {}
+    }
+
+    /* ================= ELEMENTOS ================= */
+    const abas = document.getElementById("abas");
+    const abaLogin = document.getElementById("abaLogin");
+    const abaCadastro = document.getElementById("abaCadastro");
+    const formLogin = document.getElementById("formLogin");
+    const formCadastro = document.getElementById("formCadastro");
+    const container = document.querySelector(".container");
+
+    /* ================= TROCAR ENTRE LOGIN E CADASTRO ================= */
+    function mostrar(tela) {
+      [formLogin, formCadastro].forEach(el => el.classList.remove("ativo"));
+      limparMensagens();
+
+      if (tela === "login") {
+        formLogin.classList.add("ativo");
+        abas.classList.remove("cadastro");
+        abaLogin.classList.add("ativa");
+        abaCadastro.classList.remove("ativa");
+      } else {
+        formCadastro.classList.add("ativo");
+        abas.classList.add("cadastro");
+        abaCadastro.classList.add("ativa");
+        abaLogin.classList.remove("ativa");
+      }
+    }
+
+    abaLogin.onclick = () => mostrar("login");
+    abaCadastro.onclick = () => mostrar("cadastro");
+    document.getElementById("irCadastro").onclick = () => mostrar("cadastro");
+    document.getElementById("irLogin").onclick = () => mostrar("login");
+
+    /* ================= MENSAGENS ================= */
+    function mensagem(id, texto, tipo) {
+      const el = document.getElementById(id);
+      el.textContent = texto;
+      el.className = "mensagem " + tipo;
+    }
+    function limparMensagens() {
+      document.querySelectorAll(".mensagem").forEach(m => m.className = "mensagem");
+      document.querySelectorAll(".invalido").forEach(i => i.classList.remove("invalido"));
+    }
+    function marcarErro(id) { document.getElementById(id).classList.add("invalido"); }
+
+    /* ================= MOSTRAR / OCULTAR SENHA ================= */
+    document.querySelectorAll(".ver-senha").forEach(botao => {
+      botao.onclick = () => {
+        const input = document.getElementById(botao.dataset.alvo);
+        const oculto = input.type === "password";
+        input.type = oculto ? "text" : "password";
+        botao.textContent = oculto ? "Ocultar" : "Mostrar";
+      };
+    });
+
+    /* ================= MÁSCARAS DE CPF E TELEFONE ================= */
+    document.getElementById("cadCpf").addEventListener("input", e => {
+      let v = e.target.value.replace(/\D/g, "").slice(0, 11);
+      v = v.replace(/(\d{3})(\d)/, "$1.$2")
+           .replace(/(\d{3})(\d)/, "$1.$2")
+           .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      e.target.value = v;
+    });
+
+    document.getElementById("cadTelefone").addEventListener("input", e => {
+      let v = e.target.value.replace(/\D/g, "").slice(0, 11);
+      v = v.replace(/^(\d{2})(\d)/, "($1) $2")
+           .replace(/(\d{5})(\d{1,4})$/, "$1-$2");
+      e.target.value = v;
+    });
+
+    /* ================= CADASTRO ================= */
+    formCadastro.addEventListener("submit", e => {
+      e.preventDefault();
+      limparMensagens();
+
+      const usuario = {
+        nome: document.getElementById("cadNome").value.trim(),
+        cpf: document.getElementById("cadCpf").value.trim(),
+        nascimento: document.getElementById("cadNascimento").value,
+        telefone: document.getElementById("cadTelefone").value.trim(),
+        email: document.getElementById("cadEmail").value.trim().toLowerCase(),
+        senha: document.getElementById("cadSenha").value
+      };
+      const confirmar = document.getElementById("cadConfirmar").value;
+      const termos = document.getElementById("cadTermos").checked;
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuario.email);
+
+      if (usuario.nome.split(" ").length < 2) { marcarErro("cadNome"); return mensagem("msgCadastro", "Digite seu nome completo.", "erro"); }
+      if (usuario.cpf.length !== 14)          { marcarErro("cadCpf"); return mensagem("msgCadastro", "CPF incompleto.", "erro"); }
+      if (!usuario.nascimento)                { marcarErro("cadNascimento"); return mensagem("msgCadastro", "Informe sua data de nascimento.", "erro"); }
+      if (usuario.telefone.length < 14)       { marcarErro("cadTelefone"); return mensagem("msgCadastro", "Telefone incompleto.", "erro"); }
+      if (!emailValido)                       { marcarErro("cadEmail"); return mensagem("msgCadastro", "E-mail inválido.", "erro"); }
+      if (usuario.senha.length < 6)           { marcarErro("cadSenha"); return mensagem("msgCadastro", "A senha precisa ter pelo menos 6 caracteres.", "erro"); }
+      if (usuario.senha !== confirmar)        { marcarErro("cadConfirmar"); return mensagem("msgCadastro", "As senhas não coincidem.", "erro"); }
+      if (!termos)                            { return mensagem("msgCadastro", "Você precisa aceitar os termos de uso.", "erro"); }
+
+      const usuarios = lerUsuarios();
+      if (usuarios.some(u => u.email === usuario.email)) { marcarErro("cadEmail"); return mensagem("msgCadastro", "Este e-mail já está cadastrado.", "erro"); }
+      if (usuarios.some(u => u.cpf === usuario.cpf))     { marcarErro("cadCpf"); return mensagem("msgCadastro", "Este CPF já está cadastrado.", "erro"); }
+
+      usuarios.push(usuario);
+      salvarUsuarios(usuarios);
+      formCadastro.reset();
+
+      mostrar("login");
+      document.getElementById("loginEmail").value = usuario.email;
+      mensagem("msgLogin", "Conta criada com sucesso! Agora é só entrar. ✅", "sucesso");
+    });
+
+    /* ================= LOGIN ================= */
+    formLogin.addEventListener("submit", e => {
+      e.preventDefault();
+      limparMensagens();
+
+      const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+      const senha = document.getElementById("loginSenha").value;
+
+      if (!email || !senha) return mensagem("msgLogin", "Preencha e-mail e senha.", "erro");
+
+      const usuario = lerUsuarios().find(u => u.email === email && u.senha === senha);
+      if (!usuario) {
+        marcarErro("loginEmail"); marcarErro("loginSenha");
+        return mensagem("msgLogin", "E-mail ou senha incorretos.", "erro");
+      }
+
+      if (document.getElementById("lembrar").checked) {
+        try { localStorage.setItem("vs_logado", email); } catch (e) {}
+      }
+      formLogin.reset();
+      abrirApp(usuario);
+    });
+
+    /* =====================================================================
+       ÁREA DE AGENDAMENTO
+       ===================================================================== */
+
+    /* ----- Médicos e especialidades da clínica ----- */
+    const MANHA = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"];
+    const TARDE = ["13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"];
+    const DIAS_SEMANA = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+
+    const especialidades = [
+      { nome: "Clínico Geral", icone: "🩺" },
+      { nome: "Cardiologia",   icone: "❤️" },
+      { nome: "Dermatologia",  icone: "🧴" },
+      { nome: "Pediatria",     icone: "🧸" },
+      { nome: "Ortopedia",     icone: "🦴" },
+      { nome: "Ginecologia",   icone: "🌸" },
+      { nome: "Oftalmologia",  icone: "👁️" },
+      { nome: "Neurologia",    icone: "🧠" }
+    ];
+
+    // dias: 0 = domingo, 1 = segunda ... 6 = sábado
+    const medicos = [
+      { id: 1,  nome: "Dra. Ana Ribeiro",    esp: "Clínico Geral", crm: "CRM 102345", nota: 4.9, dias: [1, 2, 3, 4, 5], horarios: MANHA.concat(TARDE) },
+      { id: 2,  nome: "Dr. Paulo Mendes",    esp: "Clínico Geral", crm: "CRM 118772", nota: 4.7, dias: [1, 3, 5, 6],    horarios: TARDE },
+      { id: 3,  nome: "Dr. Ricardo Alves",   esp: "Cardiologia",   crm: "CRM 097531", nota: 4.8, dias: [1, 3, 5],       horarios: MANHA },
+      { id: 4,  nome: "Dra. Fernanda Costa", esp: "Cardiologia",   crm: "CRM 120864", nota: 4.9, dias: [2, 4],          horarios: MANHA.concat(TARDE) },
+      { id: 5,  nome: "Dra. Juliana Souza",  esp: "Dermatologia",  crm: "CRM 133210", nota: 4.8, dias: [2, 3, 4],       horarios: TARDE },
+      { id: 6,  nome: "Dr. Gustavo Prado",   esp: "Dermatologia",  crm: "CRM 128455", nota: 4.6, dias: [1, 5, 6],       horarios: MANHA },
+      { id: 7,  nome: "Dra. Camila Rocha",   esp: "Pediatria",     crm: "CRM 109876", nota: 5.0, dias: [1, 2, 3, 4, 5], horarios: MANHA },
+      { id: 8,  nome: "Dr. Marcos Lima",     esp: "Pediatria",     crm: "CRM 125643", nota: 4.7, dias: [1, 3, 5],       horarios: TARDE },
+      { id: 9,  nome: "Dr. Eduardo Martins", esp: "Ortopedia",     crm: "CRM 101928", nota: 4.6, dias: [2, 4, 6],       horarios: MANHA },
+      { id: 10, nome: "Dra. Beatriz Nunes",  esp: "Ginecologia",   crm: "CRM 117345", nota: 4.9, dias: [1, 2, 4],       horarios: MANHA.concat(TARDE) },
+      { id: 11, nome: "Dr. Henrique Dias",   esp: "Oftalmologia",  crm: "CRM 130987", nota: 4.8, dias: [3, 5],          horarios: MANHA },
+      { id: 12, nome: "Dra. Larissa Pires",  esp: "Neurologia",    crm: "CRM 114562", nota: 4.7, dias: [2, 4],          horarios: TARDE }
+    ];
+
+    /* ----- Consultas salvas no navegador ----- */
+    function lerConsultas() {
+      try { return JSON.parse(localStorage.getItem("vs_consultas")) || []; }
+      catch (e) { return []; }
+    }
+    function salvarConsultas(lista) {
+      try { localStorage.setItem("vs_consultas", JSON.stringify(lista)); } catch (e) {}
+    }
+
+    /* ----- Estado da tela ----- */
+    let usuarioAtual = null;
+    const escolha = { esp: null, medico: null, data: null, hora: null };
+
+    /* ----- Funções de apoio para datas ----- */
+    function chaveData(d) {
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+    function dataDe(chave) {
+      const [a, m, d] = chave.split("-").map(Number);
+      return new Date(a, m - 1, d);
+    }
+    function dataExtenso(chave) {
+      return dataDe(chave).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" });
+    }
+    function horarioPassado(data, hora) {
+      const [h, m] = hora.split(":").map(Number);
+      const dt = dataDe(data);
+      dt.setHours(h, m);
+      return dt < new Date();
+    }
+    function horarioOcupado(medicoId, data, hora) {
+      return lerConsultas().some(c => c.medicoId === medicoId && c.data === data && c.hora === hora);
+    }
+    function horariosLivres(medico, data) {
+      return medico.horarios.filter(h => !horarioOcupado(medico.id, data, h) && !horarioPassado(data, h));
+    }
+    function iniciais(nome) {
+      return nome.replace(/^Dra?\.\s*/, "").split(" ").map(p => p[0]).slice(0, 2).join("");
+    }
+
+    /* ----- Etapa 1: especialidades ----- */
+    function renderEspecialidades() {
+      document.getElementById("listaEspecialidades").innerHTML = especialidades.map(e => {
+        const qtd = medicos.filter(m => m.esp === e.nome).length;
+        return `<button type="button" class="opcao ${escolha.esp === e.nome ? "selecionada" : ""}" data-esp="${e.nome}">
+                  <span class="emoji">${e.icone}</span>
+                  <strong>${e.nome}</strong>
+                  <small>${qtd} médico${qtd > 1 ? "s" : ""}</small>
+                </button>`;
+      }).join("");
+    }
+
+    /* ----- Etapa 2: médicos ----- */
+    function renderMedicos() {
+      const lista = document.getElementById("listaMedicos");
+      if (!escolha.esp) { lista.innerHTML = '<p class="dica">Selecione uma especialidade primeiro.</p>'; return; }
+
+      lista.innerHTML = medicos.filter(m => m.esp === escolha.esp).map(m => `
+        <button type="button" class="opcao medico ${escolha.medico && escolha.medico.id === m.id ? "selecionada" : ""}" data-medico="${m.id}">
+          <span class="foto-medico">${iniciais(m.nome)}</span>
+          <span>
+            <strong>${m.nome}</strong>
+            <small>${m.crm} · <span class="estrela">★</span> ${m.nota.toFixed(1)}</small>
+            <small>Atende: ${m.dias.map(d => DIAS_SEMANA[d]).join(", ")}</small>
+          </span>
+        </button>`).join("");
+    }
+
+    /* ----- Etapa 3: dias (próximos 10 dias em que o médico atende) ----- */
+    function renderDatas() {
+      const lista = document.getElementById("listaDatas");
+      if (!escolha.medico) { lista.innerHTML = '<p class="dica">Selecione um médico primeiro.</p>'; return; }
+
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+      const dias = [];
+      for (let i = 0; dias.length < 10 && i < 60; i++) {
+        const dia = new Date(hoje);
+        dia.setDate(hoje.getDate() + i);
+        if (escolha.medico.dias.includes(dia.getDay())) dias.push(dia);
+      }
+
+      lista.innerHTML = dias.map(dia => {
+        const chave = chaveData(dia);
+        const lotado = horariosLivres(escolha.medico, chave).length === 0;
+        return `<button type="button" class="opcao data ${escolha.data === chave ? "selecionada" : ""}" data-data="${chave}" ${lotado ? "disabled title='Sem horários livres'" : ""}>
+                  <small>${DIAS_SEMANA[dia.getDay()]}</small>
+                  <strong>${String(dia.getDate()).padStart(2, "0")}</strong>
+                  <small>${MESES[dia.getMonth()]}</small>
+                </button>`;
+      }).join("");
+    }
+
+    /* ----- Etapa 4: horários ----- */
+    function renderHorarios() {
+      const lista = document.getElementById("listaHorarios");
+      if (!escolha.data) { lista.innerHTML = '<p class="dica">Selecione um dia primeiro.</p>'; return; }
+
+      const botao = h => {
+        const indisponivel = horarioOcupado(escolha.medico.id, escolha.data, h) || horarioPassado(escolha.data, h);
+        return `<button type="button" class="opcao hora ${escolha.hora === h ? "selecionada" : ""}" data-hora="${h}" ${indisponivel ? "disabled title='Indisponível'" : ""}>${h}</button>`;
+      };
+      const manha = escolha.medico.horarios.filter(h => h < "12:00");
+      const tarde = escolha.medico.horarios.filter(h => h >= "12:00");
+
+      lista.innerHTML =
+        (manha.length ? '<p class="grupo-hora">☀️ Manhã</p>' + manha.map(botao).join("") : "") +
+        (tarde.length ? '<p class="grupo-hora">🌤️ Tarde</p>' + tarde.map(botao).join("") : "");
+    }
+
+    /* ----- Resumo e estado das etapas ----- */
+    function renderResumo() {
+      document.getElementById("rEsp").textContent  = escolha.esp || "—";
+      document.getElementById("rMed").textContent  = escolha.medico ? escolha.medico.nome : "—";
+      document.getElementById("rData").textContent = escolha.data ? dataExtenso(escolha.data) : "—";
+      document.getElementById("rHora").textContent = escolha.hora || "—";
+      document.getElementById("confirmar").disabled = !(escolha.esp && escolha.medico && escolha.data && escolha.hora);
+
+      const etapas = [
+        ["etapa1", true,           escolha.esp],
+        ["etapa2", escolha.esp,    escolha.medico],
+        ["etapa3", escolha.medico, escolha.data],
+        ["etapa4", escolha.data,   escolha.hora]
+      ];
+      etapas.forEach(([id, liberada, feita]) => {
+        const el = document.getElementById(id);
+        el.classList.toggle("bloqueada", !liberada);
+        el.classList.toggle("feita", !!feita);
+      });
+    }
+
+    function atualizar() {
+      renderEspecialidades();
+      renderMedicos();
+      renderDatas();
+      renderHorarios();
+      renderResumo();
+    }
+
+    function limparEscolha() {
+      escolha.esp = escolha.medico = escolha.data = escolha.hora = null;
+    }
+
+    /* ----- Cliques nas opções ----- */
+    document.getElementById("listaEspecialidades").addEventListener("click", e => {
+      const b = e.target.closest("[data-esp]");
+      if (!b) return;
+      escolha.esp = b.dataset.esp;
+      escolha.medico = escolha.data = escolha.hora = null;
+      atualizar();
+    });
+
+    document.getElementById("listaMedicos").addEventListener("click", e => {
+      const b = e.target.closest("[data-medico]");
+      if (!b) return;
+      escolha.medico = medicos.find(m => m.id === Number(b.dataset.medico));
+      escolha.data = escolha.hora = null;
+      atualizar();
+    });
+
+    document.getElementById("listaDatas").addEventListener("click", e => {
+      const b = e.target.closest("[data-data]");
+      if (!b || b.disabled) return;
+      escolha.data = b.dataset.data;
+      escolha.hora = null;
+      atualizar();
+    });
+
+    document.getElementById("listaHorarios").addEventListener("click", e => {
+      const b = e.target.closest("[data-hora]");
+      if (!b || b.disabled) return;
+      escolha.hora = b.dataset.hora;
+      atualizar();
+    });
+
+    /* ----- Confirmar agendamento ----- */
+    const modal = document.getElementById("modal");
+
+    document.getElementById("confirmar").onclick = () => {
+      const { medico, data, hora } = escolha;
+      if (!medico || !data || !hora) return;
+
+      if (horarioOcupado(medico.id, data, hora)) {
+        alert("Esse horário acabou de ser ocupado. Escolha outro, por favor.");
+        escolha.hora = null;
+        return atualizar();
+      }
+
+      const consultas = lerConsultas();
+      if (consultas.some(c => c.email === usuarioAtual.email && c.data === data && c.hora === hora)) {
+        alert("Você já tem outra consulta marcada nesse mesmo dia e horário.");
+        return;
+      }
+
+      consultas.push({ id: Date.now(), email: usuarioAtual.email, medicoId: medico.id, data, hora });
+      salvarConsultas(consultas);
+
+      document.getElementById("modalTexto").textContent =
+        `${medico.nome} (${medico.esp}) — ${dataExtenso(data)}, às ${hora}. Chegue com 15 minutos de antecedência.`;
+      modal.classList.add("aberto");
+
+      limparEscolha();
+      atualizar();
+      renderMinhas();
+    };
+
+    document.getElementById("modalVer").onclick = () => { modal.classList.remove("aberto"); trocarAba("abaMinhas"); };
+    document.getElementById("modalFechar").onclick = () => modal.classList.remove("aberto");
+    modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("aberto"); });
+
+    /* ----- Minhas consultas ----- */
+    function renderMinhas() {
+      const lista = document.getElementById("listaConsultas");
+      const minhas = lerConsultas()
+        .filter(c => c.email === usuarioAtual.email)
+        .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+
+      document.getElementById("contador").textContent = minhas.filter(c => !horarioPassado(c.data, c.hora)).length;
+
+      if (!minhas.length) {
+        lista.innerHTML = `<div class="vazio">
+            <span class="emoji">📭</span>
+            Você ainda não tem consultas marcadas.<br>
+            <button type="button" class="botao" data-ir-agendar>Agendar agora</button>
+          </div>`;
+        return;
+      }
+
+      lista.innerHTML = minhas.map(c => {
+        const m = medicos.find(x => x.id === c.medicoId);
+        const dt = dataDe(c.data);
+        const passada = horarioPassado(c.data, c.hora);
+        return `<div class="consulta ${passada ? "passada" : ""}">
+                  <div class="consulta-data">
+                    <small>${DIAS_SEMANA[dt.getDay()]}</small>
+                    <strong>${String(dt.getDate()).padStart(2, "0")}</strong>
+                    <small>${MESES[dt.getMonth()]}</small>
+                  </div>
+                  <div class="consulta-info">
+                    <strong>${m.nome}</strong>
+                    ${m.esp} · ${m.crm} · 🕒 ${c.hora}<br>
+                    <span class="status">${passada ? "Realizada" : "Confirmada"}</span>
+                  </div>
+                  ${passada ? "" : `<button type="button" class="btn-cancelar" data-cancelar="${c.id}">Cancelar</button>`}
+                </div>`;
+      }).join("");
+    }
+
+    document.getElementById("listaConsultas").addEventListener("click", e => {
+      if (e.target.closest("[data-ir-agendar]")) return trocarAba("abaAgendar");
+
+      const b = e.target.closest("[data-cancelar]");
+      if (!b) return;
+      if (!confirm("Deseja mesmo cancelar esta consulta?")) return;
+      salvarConsultas(lerConsultas().filter(c => c.id !== Number(b.dataset.cancelar)));
+      renderMinhas();
+      atualizar();
+    });
+
+    /* ----- Abas da área do paciente ----- */
+    function trocarAba(id) {
+      document.querySelectorAll(".aba-app").forEach(a => a.classList.toggle("ativa", a.id === id));
+      document.querySelectorAll(".menu button").forEach(b => b.classList.toggle("ativo", b.dataset.aba === id));
+    }
+    document.querySelectorAll(".menu button").forEach(b => b.onclick = () => trocarAba(b.dataset.aba));
+
+    /* ----- Entrar e sair da área do paciente ----- */
+    function abrirApp(u) {
+      usuarioAtual = u;
+      const primeiroNome = u.nome.split(" ")[0];
+      document.getElementById("saudacao").textContent = "Olá, " + primeiroNome + "! 👋";
+      document.getElementById("avatar").textContent = primeiroNome.charAt(0).toUpperCase();
+      document.getElementById("pNome").textContent = u.nome;
+      document.getElementById("pCpf").textContent = u.cpf;
+      document.getElementById("pNascimento").textContent = u.nascimento.split("-").reverse().join("/");
+      document.getElementById("pTelefone").textContent = u.telefone;
+      document.getElementById("pEmail").textContent = u.email;
+
+      limparEscolha();
+      atualizar();
+      renderMinhas();
+      trocarAba("abaAgendar");
+      container.classList.add("logado");
+      window.scrollTo(0, 0);
+    }
+
+    document.getElementById("sair").onclick = () => {
+      try { localStorage.removeItem("vs_logado"); } catch (e) {}
+      usuarioAtual = null;
+      container.classList.remove("logado");
+      mostrar("login");
+    };
+
+    document.getElementById("esqueci").onclick = () => {
+      mensagem("msgLogin", "Entre em contato com a clínica pelo (00) 0000-0000 para redefinir sua senha.", "sucesso");
+    };
+
+    /* ================= "LEMBRAR DE MIM" ================= */
+    try {
+      const logado = localStorage.getItem("vs_logado");
+      const u = lerUsuarios().find(x => x.email === logado);
+      if (u) abrirApp(u);
+    } catch (e) {}
+  </script>
+</body>
+</html>
