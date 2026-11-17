@@ -296,21 +296,260 @@
     .mensagem.erro    { display: block; background: #fee2e2; color: var(--erro); }
     .mensagem.sucesso { display: block; background: var(--verde-claro); color: var(--verde-escuro); }
 
-    /* ================= PAINEL APÓS O LOGIN ================= */
-    .painel { display: none; animation: aparecer 0.4s ease; }
-    .painel.ativo { display: block; }
+    /* ================= ÁREA DE AGENDAMENTO (após login) ================= */
+    .app { display: none; flex: 1; flex-direction: column; background: #f7fdf9; min-width: 0; }
+    .container.logado { max-width: 1150px; }
+    .container.logado .lado-imagem,
+    .container.logado .lado-form { display: none; }
+    .container.logado .app { display: flex; }
 
+    /* Topo */
+    .topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 32px;
+      color: var(--branco);
+      background: linear-gradient(135deg, var(--verde-escuro), var(--verde));
+    }
+    .topo .logo { font-size: 1.3rem; }
+    .topo .logo-icone { width: 40px; height: 40px; }
+    .usuario { display: flex; align-items: center; gap: 12px; font-size: 0.92rem; }
+    .usuario small { display: block; opacity: 0.85; font-size: 0.75rem; }
     .avatar {
-      width: 70px; height: 70px;
+      width: 42px; height: 42px;
       border-radius: 50%;
       display: grid; place-items: center;
-      background: linear-gradient(135deg, var(--verde), var(--verde-medio));
-      color: var(--branco);
-      font-size: 1.6rem;
+      background: var(--branco);
+      color: var(--verde);
+      font-size: 1.1rem;
       font-weight: 700;
-      margin-bottom: 14px;
-      box-shadow: 0 10px 22px rgba(22, 163, 74, 0.35);
+      flex-shrink: 0;
     }
+    .btn-sair {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: var(--branco);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-sair:hover { background: rgba(255, 255, 255, 0.28); }
+
+    /* Menu de abas */
+    .menu {
+      display: flex;
+      gap: 6px;
+      padding: 10px 32px 0;
+      background: var(--branco);
+      border-bottom: 1px solid var(--borda);
+      overflow-x: auto;
+    }
+    .menu button {
+      border: none;
+      background: none;
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--texto-claro);
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .menu button.ativo { color: var(--verde); border-bottom-color: var(--verde); }
+    .contador {
+      background: var(--verde);
+      color: var(--branco);
+      border-radius: 20px;
+      padding: 1px 8px;
+      font-size: 0.72rem;
+      margin-left: 4px;
+    }
+
+    .conteudo { padding: 28px 32px; }
+    .aba-app { display: none; animation: aparecer 0.4s ease; }
+    .aba-app.ativa { display: block; }
+    .aba-app > h2 { color: var(--verde-escuro); font-size: 1.4rem; margin-bottom: 16px; }
+
+    /* Etapas do agendamento */
+    .agendar { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; align-items: start; }
+    .etapa {
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      padding: 20px 22px;
+      margin-bottom: 16px;
+      transition: opacity 0.3s;
+    }
+    .etapa.bloqueada { opacity: 0.45; pointer-events: none; }
+    .etapa h3 { display: flex; align-items: center; gap: 10px; font-size: 1rem; color: var(--verde-escuro); margin-bottom: 14px; }
+    .numero {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--verde-claro);
+      color: var(--verde);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .etapa.feita .numero { background: var(--verde); color: var(--branco); }
+    .dica { color: var(--texto-claro); font-size: 0.88rem; grid-column: 1 / -1; }
+
+    /* Botões de escolha (especialidade, médico, dia, horário) */
+    .opcao {
+      border: 1.5px solid var(--borda);
+      background: #f7fdf9;
+      border-radius: 14px;
+      padding: 12px;
+      font-family: inherit;
+      color: var(--texto);
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .opcao:hover { border-color: var(--verde-medio); transform: translateY(-2px); }
+    .opcao.selecionada {
+      border-color: var(--verde);
+      background: var(--verde-claro);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+    }
+    .opcao:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+      border-color: var(--borda);
+      text-decoration: line-through;
+    }
+    .opcao .emoji { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+    .opcao strong { display: block; font-size: 0.85rem; }
+    .opcao small { display: block; color: var(--texto-claro); font-size: 0.72rem; }
+
+    .lista-especialidades { display: grid; grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); gap: 10px; }
+
+    .lista-medicos { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+    .medico { display: flex; align-items: center; gap: 12px; text-align: left; }
+    .foto-medico {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: grid; place-items: center;
+      color: var(--branco);
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--verde), var(--verde-medio));
+      box-shadow: 0 6px 14px rgba(22, 163, 74, 0.3);
+    }
+    .medico strong { font-size: 0.9rem; }
+    .estrela { color: #f59e0b; }
+
+    .lista-datas { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 8px; }
+    .data { min-width: 72px; padding: 10px 8px; }
+    .data small { text-transform: uppercase; }
+    .data strong { font-size: 1.25rem; }
+
+    .lista-horarios { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 8px; }
+    .hora { padding: 10px 6px; font-weight: 600; font-size: 0.88rem; }
+    .grupo-hora { font-size: 0.8rem; font-weight: 600; color: var(--texto-claro); margin: 4px 0 8px; grid-column: 1 / -1; }
+
+    /* Resumo */
+    .resumo {
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 12px 30px rgba(15, 81, 50, 0.08);
+    }
+    .resumo h3 { color: var(--verde-escuro); margin-bottom: 10px; }
+    .resumo-linha {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px dashed var(--borda);
+      font-size: 0.86rem;
+    }
+    .resumo-linha span { color: var(--texto-claro); }
+    .resumo-linha strong { text-align: right; }
+    .resumo .botao { margin-top: 18px; }
+    .botao:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    /* Minhas consultas */
+    .consulta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-left: 5px solid var(--verde);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+    .consulta.passada { border-left-color: #94a3b8; opacity: 0.7; }
+    .consulta-data {
+      text-align: center;
+      min-width: 64px;
+      background: var(--verde-claro);
+      color: var(--verde-escuro);
+      border-radius: 12px;
+      padding: 8px;
+    }
+    .consulta-data strong { display: block; font-size: 1.4rem; line-height: 1.1; }
+    .consulta-data small { font-size: 0.7rem; text-transform: uppercase; }
+    .consulta-info { flex: 1; font-size: 0.86rem; color: var(--texto-claro); }
+    .consulta-info strong { display: block; font-size: 0.98rem; color: var(--texto); }
+    .status { display: inline-block; margin-top: 4px; padding: 2px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; background: var(--verde-claro); color: var(--verde-escuro); }
+    .passada .status { background: #e2e8f0; color: #475569; }
+    .btn-cancelar {
+      border: 1.5px solid #fecaca;
+      background: var(--branco);
+      color: var(--erro);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-cancelar:hover { background: #fee2e2; }
+    .vazio { text-align: center; padding: 40px 20px; color: var(--texto-claro); }
+    .vazio .emoji { font-size: 2.6rem; display: block; margin-bottom: 8px; }
+    .vazio .botao { max-width: 240px; margin-top: 18px; }
+
+    /* Janela de confirmação */
+    .modal-fundo {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(15, 81, 50, 0.45);
+      backdrop-filter: blur(3px);
+    }
+    .modal-fundo.aberto { display: flex; }
+    .modal {
+      background: var(--branco);
+      border-radius: 22px;
+      padding: 32px 28px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      animation: aparecer 0.3s ease;
+    }
+    .check-grande {
+      width: 72px; height: 72px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--verde-claro);
+      font-size: 2rem;
+    }
+    .modal h3 { color: var(--verde-escuro); margin-bottom: 8px; }
+    .modal p { color: var(--texto-claro); font-size: 0.9rem; margin-bottom: 20px; }
 
     .tabela {
       width: 100%;
@@ -338,6 +577,19 @@
       .grade { grid-template-columns: 1fr; }
       .cards-saude { display: none; }
       .opcoes { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+
+    /* Responsivo da área de agendamento */
+    @media (max-width: 900px) {
+      .agendar { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .topo { padding: 14px 16px; }
+      .topo .logo span:last-child, .usuario-texto { display: none; }
+      .menu { padding: 6px 8px 0; }
+      .conteudo { padding: 20px 14px; }
+      .etapa { padding: 16px; }
+      .consulta { flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -509,28 +761,104 @@
         <p class="rodape-form">Já tem conta? <button type="button" class="link" id="irLogin">Entrar</button></p>
       </form>
 
-      <!-- ===== PAINEL DO USUÁRIO (após login) ===== -->
-      <div class="painel" id="painel">
-        <div class="avatar" id="avatar">M</div>
-        <div class="titulo">
-          <h2 id="saudacao">Olá!</h2>
-          <p>Você está conectado. Confira seus dados:</p>
+    </section>
+
+    <!-- ========== ÁREA DE AGENDAMENTO (aparece depois do login) ========== -->
+    <section class="app" id="app">
+
+      <header class="topo">
+        <div class="logo">
+          <span class="logo-icone">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#16a34a"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z"/></svg>
+          </span>
+          <span>VidaSaúde</span>
+        </div>
+        <div class="usuario">
+          <div class="avatar" id="avatar">M</div>
+          <div class="usuario-texto">
+            <strong id="saudacao">Olá!</strong>
+            <small>Área do paciente</small>
+          </div>
+          <button type="button" class="btn-sair" id="sair">Sair</button>
+        </div>
+      </header>
+
+      <nav class="menu">
+        <button type="button" class="ativo" data-aba="abaAgendar">📅 Agendar consulta</button>
+        <button type="button" data-aba="abaMinhas">🗂️ Minhas consultas <span class="contador" id="contador">0</span></button>
+        <button type="button" data-aba="abaDados">👤 Meus dados</button>
+      </nav>
+
+      <div class="conteudo">
+
+        <!-- ABA: AGENDAR -->
+        <div class="aba-app ativa" id="abaAgendar">
+          <div class="agendar">
+            <div>
+              <div class="etapa" id="etapa1">
+                <h3><span class="numero">1</span> Escolha a especialidade</h3>
+                <div class="lista-especialidades" id="listaEspecialidades"></div>
+              </div>
+
+              <div class="etapa bloqueada" id="etapa2">
+                <h3><span class="numero">2</span> Escolha o médico</h3>
+                <div class="lista-medicos" id="listaMedicos"></div>
+              </div>
+
+              <div class="etapa bloqueada" id="etapa3">
+                <h3><span class="numero">3</span> Escolha o dia</h3>
+                <div class="lista-datas" id="listaDatas"></div>
+              </div>
+
+              <div class="etapa bloqueada" id="etapa4">
+                <h3><span class="numero">4</span> Escolha o horário</h3>
+                <div class="lista-horarios" id="listaHorarios"></div>
+              </div>
+            </div>
+
+            <aside class="resumo">
+              <h3>🩺 Resumo da consulta</h3>
+              <div class="resumo-linha"><span>Especialidade</span><strong id="rEsp">—</strong></div>
+              <div class="resumo-linha"><span>Médico</span><strong id="rMed">—</strong></div>
+              <div class="resumo-linha"><span>Dia</span><strong id="rData">—</strong></div>
+              <div class="resumo-linha"><span>Horário</span><strong id="rHora">—</strong></div>
+              <button type="button" class="botao" id="confirmar" disabled>Confirmar agendamento</button>
+            </aside>
+          </div>
         </div>
 
-        <table class="tabela">
-          <tr><th>Nome</th><td id="pNome"></td></tr>
-          <tr><th>CPF</th><td id="pCpf"></td></tr>
-          <tr><th>Nascimento</th><td id="pNascimento"></td></tr>
-          <tr><th>Telefone</th><td id="pTelefone"></td></tr>
-          <tr><th>E-mail</th><td id="pEmail"></td></tr>
-        </table>
+        <!-- ABA: MINHAS CONSULTAS -->
+        <div class="aba-app" id="abaMinhas">
+          <h2>Minhas consultas</h2>
+          <div id="listaConsultas"></div>
+        </div>
 
-        <button type="button" class="botao" onclick="alert('Em breve: agendamento de consultas! 🩺')">Agendar consulta</button>
-        <button type="button" class="botao secundario" id="sair">Sair</button>
+        <!-- ABA: MEUS DADOS -->
+        <div class="aba-app" id="abaDados">
+          <h2>Meus dados</h2>
+          <table class="tabela">
+            <tr><th>Nome</th><td id="pNome"></td></tr>
+            <tr><th>CPF</th><td id="pCpf"></td></tr>
+            <tr><th>Nascimento</th><td id="pNascimento"></td></tr>
+            <tr><th>Telefone</th><td id="pTelefone"></td></tr>
+            <tr><th>E-mail</th><td id="pEmail"></td></tr>
+          </table>
+        </div>
+
       </div>
-
     </section>
   </main>
+
+  <!-- Janela de confirmação do agendamento -->
+  <div class="modal-fundo" id="modal">
+    <div class="modal">
+      <div class="check-grande">✅</div>
+      <h3>Consulta agendada!</h3>
+      <p id="modalTexto"></p>
+      <button type="button" class="botao" id="modalVer">Ver minhas consultas</button>
+      <button type="button" class="botao secundario" id="modalFechar">Agendar outra</button>
+    </div>
+  </div>
 
   <script>
     /* ================= ARMAZENAMENTO (no navegador) ================= */
@@ -548,12 +876,11 @@
     const abaCadastro = document.getElementById("abaCadastro");
     const formLogin = document.getElementById("formLogin");
     const formCadastro = document.getElementById("formCadastro");
-    const painel = document.getElementById("painel");
+    const container = document.querySelector(".container");
 
     /* ================= TROCAR ENTRE LOGIN E CADASTRO ================= */
     function mostrar(tela) {
-      [formLogin, formCadastro, painel].forEach(el => el.classList.remove("ativo"));
-      abas.style.display = tela === "painel" ? "none" : "flex";
+      [formLogin, formCadastro].forEach(el => el.classList.remove("ativo"));
       limparMensagens();
 
       if (tela === "login") {
@@ -561,13 +888,11 @@
         abas.classList.remove("cadastro");
         abaLogin.classList.add("ativa");
         abaCadastro.classList.remove("ativa");
-      } else if (tela === "cadastro") {
+      } else {
         formCadastro.classList.add("ativo");
         abas.classList.add("cadastro");
         abaCadastro.classList.add("ativa");
         abaLogin.classList.remove("ativa");
-      } else {
-        painel.classList.add("ativo");
       }
     }
 
@@ -673,11 +998,315 @@
         try { localStorage.setItem("vs_logado", email); } catch (e) {}
       }
       formLogin.reset();
-      abrirPainel(usuario);
+      abrirApp(usuario);
     });
 
-    /* ================= PAINEL ================= */
-    function abrirPainel(u) {
+    /* =====================================================================
+       ÁREA DE AGENDAMENTO
+       ===================================================================== */
+
+    /* ----- Médicos e especialidades da clínica ----- */
+    const MANHA = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30"];
+    const TARDE = ["13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00"];
+    const DIAS_SEMANA = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+    const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+
+    const especialidades = [
+      { nome: "Clínico Geral", icone: "🩺" },
+      { nome: "Cardiologia",   icone: "❤️" },
+      { nome: "Dermatologia",  icone: "🧴" },
+      { nome: "Pediatria",     icone: "🧸" },
+      { nome: "Ortopedia",     icone: "🦴" },
+      { nome: "Ginecologia",   icone: "🌸" },
+      { nome: "Oftalmologia",  icone: "👁️" },
+      { nome: "Neurologia",    icone: "🧠" }
+    ];
+
+    // dias: 0 = domingo, 1 = segunda ... 6 = sábado
+    const medicos = [
+      { id: 1,  nome: "Dra. Ana Ribeiro",    esp: "Clínico Geral", crm: "CRM 102345", nota: 4.9, dias: [1, 2, 3, 4, 5], horarios: MANHA.concat(TARDE) },
+      { id: 2,  nome: "Dr. Paulo Mendes",    esp: "Clínico Geral", crm: "CRM 118772", nota: 4.7, dias: [1, 3, 5, 6],    horarios: TARDE },
+      { id: 3,  nome: "Dr. Ricardo Alves",   esp: "Cardiologia",   crm: "CRM 097531", nota: 4.8, dias: [1, 3, 5],       horarios: MANHA },
+      { id: 4,  nome: "Dra. Fernanda Costa", esp: "Cardiologia",   crm: "CRM 120864", nota: 4.9, dias: [2, 4],          horarios: MANHA.concat(TARDE) },
+      { id: 5,  nome: "Dra. Juliana Souza",  esp: "Dermatologia",  crm: "CRM 133210", nota: 4.8, dias: [2, 3, 4],       horarios: TARDE },
+      { id: 6,  nome: "Dr. Gustavo Prado",   esp: "Dermatologia",  crm: "CRM 128455", nota: 4.6, dias: [1, 5, 6],       horarios: MANHA },
+      { id: 7,  nome: "Dra. Camila Rocha",   esp: "Pediatria",     crm: "CRM 109876", nota: 5.0, dias: [1, 2, 3, 4, 5], horarios: MANHA },
+      { id: 8,  nome: "Dr. Marcos Lima",     esp: "Pediatria",     crm: "CRM 125643", nota: 4.7, dias: [1, 3, 5],       horarios: TARDE },
+      { id: 9,  nome: "Dr. Eduardo Martins", esp: "Ortopedia",     crm: "CRM 101928", nota: 4.6, dias: [2, 4, 6],       horarios: MANHA },
+      { id: 10, nome: "Dra. Beatriz Nunes",  esp: "Ginecologia",   crm: "CRM 117345", nota: 4.9, dias: [1, 2, 4],       horarios: MANHA.concat(TARDE) },
+      { id: 11, nome: "Dr. Henrique Dias",   esp: "Oftalmologia",  crm: "CRM 130987", nota: 4.8, dias: [3, 5],          horarios: MANHA },
+      { id: 12, nome: "Dra. Larissa Pires",  esp: "Neurologia",    crm: "CRM 114562", nota: 4.7, dias: [2, 4],          horarios: TARDE }
+    ];
+
+    /* ----- Consultas salvas no navegador ----- */
+    function lerConsultas() {
+      try { return JSON.parse(localStorage.getItem("vs_consultas")) || []; }
+      catch (e) { return []; }
+    }
+    function salvarConsultas(lista) {
+      try { localStorage.setItem("vs_consultas", JSON.stringify(lista)); } catch (e) {}
+    }
+
+    /* ----- Estado da tela ----- */
+    let usuarioAtual = null;
+    const escolha = { esp: null, medico: null, data: null, hora: null };
+
+    /* ----- Funções de apoio para datas ----- */
+    function chaveData(d) {
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    }
+    function dataDe(chave) {
+      const [a, m, d] = chave.split("-").map(Number);
+      return new Date(a, m - 1, d);
+    }
+    function dataExtenso(chave) {
+      return dataDe(chave).toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" });
+    }
+    function horarioPassado(data, hora) {
+      const [h, m] = hora.split(":").map(Number);
+      const dt = dataDe(data);
+      dt.setHours(h, m);
+      return dt < new Date();
+    }
+    function horarioOcupado(medicoId, data, hora) {
+      return lerConsultas().some(c => c.medicoId === medicoId && c.data === data && c.hora === hora);
+    }
+    function horariosLivres(medico, data) {
+      return medico.horarios.filter(h => !horarioOcupado(medico.id, data, h) && !horarioPassado(data, h));
+    }
+    function iniciais(nome) {
+      return nome.replace(/^Dra?\.\s*/, "").split(" ").map(p => p[0]).slice(0, 2).join("");
+    }
+
+    /* ----- Etapa 1: especialidades ----- */
+    function renderEspecialidades() {
+      document.getElementById("listaEspecialidades").innerHTML = especialidades.map(e => {
+        const qtd = medicos.filter(m => m.esp === e.nome).length;
+        return `<button type="button" class="opcao ${escolha.esp === e.nome ? "selecionada" : ""}" data-esp="${e.nome}">
+                  <span class="emoji">${e.icone}</span>
+                  <strong>${e.nome}</strong>
+                  <small>${qtd} médico${qtd > 1 ? "s" : ""}</small>
+                </button>`;
+      }).join("");
+    }
+
+    /* ----- Etapa 2: médicos ----- */
+    function renderMedicos() {
+      const lista = document.getElementById("listaMedicos");
+      if (!escolha.esp) { lista.innerHTML = '<p class="dica">Selecione uma especialidade primeiro.</p>'; return; }
+
+      lista.innerHTML = medicos.filter(m => m.esp === escolha.esp).map(m => `
+        <button type="button" class="opcao medico ${escolha.medico && escolha.medico.id === m.id ? "selecionada" : ""}" data-medico="${m.id}">
+          <span class="foto-medico">${iniciais(m.nome)}</span>
+          <span>
+            <strong>${m.nome}</strong>
+            <small>${m.crm} · <span class="estrela">★</span> ${m.nota.toFixed(1)}</small>
+            <small>Atende: ${m.dias.map(d => DIAS_SEMANA[d]).join(", ")}</small>
+          </span>
+        </button>`).join("");
+    }
+
+    /* ----- Etapa 3: dias (próximos 10 dias em que o médico atende) ----- */
+    function renderDatas() {
+      const lista = document.getElementById("listaDatas");
+      if (!escolha.medico) { lista.innerHTML = '<p class="dica">Selecione um médico primeiro.</p>'; return; }
+
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+      const dias = [];
+      for (let i = 0; dias.length < 10 && i < 60; i++) {
+        const dia = new Date(hoje);
+        dia.setDate(hoje.getDate() + i);
+        if (escolha.medico.dias.includes(dia.getDay())) dias.push(dia);
+      }
+
+      lista.innerHTML = dias.map(dia => {
+        const chave = chaveData(dia);
+        const lotado = horariosLivres(escolha.medico, chave).length === 0;
+        return `<button type="button" class="opcao data ${escolha.data === chave ? "selecionada" : ""}" data-data="${chave}" ${lotado ? "disabled title='Sem horários livres'" : ""}>
+                  <small>${DIAS_SEMANA[dia.getDay()]}</small>
+                  <strong>${String(dia.getDate()).padStart(2, "0")}</strong>
+                  <small>${MESES[dia.getMonth()]}</small>
+                </button>`;
+      }).join("");
+    }
+
+    /* ----- Etapa 4: horários ----- */
+    function renderHorarios() {
+      const lista = document.getElementById("listaHorarios");
+      if (!escolha.data) { lista.innerHTML = '<p class="dica">Selecione um dia primeiro.</p>'; return; }
+
+      const botao = h => {
+        const indisponivel = horarioOcupado(escolha.medico.id, escolha.data, h) || horarioPassado(escolha.data, h);
+        return `<button type="button" class="opcao hora ${escolha.hora === h ? "selecionada" : ""}" data-hora="${h}" ${indisponivel ? "disabled title='Indisponível'" : ""}>${h}</button>`;
+      };
+      const manha = escolha.medico.horarios.filter(h => h < "12:00");
+      const tarde = escolha.medico.horarios.filter(h => h >= "12:00");
+
+      lista.innerHTML =
+        (manha.length ? '<p class="grupo-hora">☀️ Manhã</p>' + manha.map(botao).join("") : "") +
+        (tarde.length ? '<p class="grupo-hora">🌤️ Tarde</p>' + tarde.map(botao).join("") : "");
+    }
+
+    /* ----- Resumo e estado das etapas ----- */
+    function renderResumo() {
+      document.getElementById("rEsp").textContent  = escolha.esp || "—";
+      document.getElementById("rMed").textContent  = escolha.medico ? escolha.medico.nome : "—";
+      document.getElementById("rData").textContent = escolha.data ? dataExtenso(escolha.data) : "—";
+      document.getElementById("rHora").textContent = escolha.hora || "—";
+      document.getElementById("confirmar").disabled = !(escolha.esp && escolha.medico && escolha.data && escolha.hora);
+
+      const etapas = [
+        ["etapa1", true,           escolha.esp],
+        ["etapa2", escolha.esp,    escolha.medico],
+        ["etapa3", escolha.medico, escolha.data],
+        ["etapa4", escolha.data,   escolha.hora]
+      ];
+      etapas.forEach(([id, liberada, feita]) => {
+        const el = document.getElementById(id);
+        el.classList.toggle("bloqueada", !liberada);
+        el.classList.toggle("feita", !!feita);
+      });
+    }
+
+    function atualizar() {
+      renderEspecialidades();
+      renderMedicos();
+      renderDatas();
+      renderHorarios();
+      renderResumo();
+    }
+
+    function limparEscolha() {
+      escolha.esp = escolha.medico = escolha.data = escolha.hora = null;
+    }
+
+    /* ----- Cliques nas opções ----- */
+    document.getElementById("listaEspecialidades").addEventListener("click", e => {
+      const b = e.target.closest("[data-esp]");
+      if (!b) return;
+      escolha.esp = b.dataset.esp;
+      escolha.medico = escolha.data = escolha.hora = null;
+      atualizar();
+    });
+
+    document.getElementById("listaMedicos").addEventListener("click", e => {
+      const b = e.target.closest("[data-medico]");
+      if (!b) return;
+      escolha.medico = medicos.find(m => m.id === Number(b.dataset.medico));
+      escolha.data = escolha.hora = null;
+      atualizar();
+    });
+
+    document.getElementById("listaDatas").addEventListener("click", e => {
+      const b = e.target.closest("[data-data]");
+      if (!b || b.disabled) return;
+      escolha.data = b.dataset.data;
+      escolha.hora = null;
+      atualizar();
+    });
+
+    document.getElementById("listaHorarios").addEventListener("click", e => {
+      const b = e.target.closest("[data-hora]");
+      if (!b || b.disabled) return;
+      escolha.hora = b.dataset.hora;
+      atualizar();
+    });
+
+    /* ----- Confirmar agendamento ----- */
+    const modal = document.getElementById("modal");
+
+    document.getElementById("confirmar").onclick = () => {
+      const { medico, data, hora } = escolha;
+      if (!medico || !data || !hora) return;
+
+      if (horarioOcupado(medico.id, data, hora)) {
+        alert("Esse horário acabou de ser ocupado. Escolha outro, por favor.");
+        escolha.hora = null;
+        return atualizar();
+      }
+
+      const consultas = lerConsultas();
+      if (consultas.some(c => c.email === usuarioAtual.email && c.data === data && c.hora === hora)) {
+        alert("Você já tem outra consulta marcada nesse mesmo dia e horário.");
+        return;
+      }
+
+      consultas.push({ id: Date.now(), email: usuarioAtual.email, medicoId: medico.id, data, hora });
+      salvarConsultas(consultas);
+
+      document.getElementById("modalTexto").textContent =
+        `${medico.nome} (${medico.esp}) — ${dataExtenso(data)}, às ${hora}. Chegue com 15 minutos de antecedência.`;
+      modal.classList.add("aberto");
+
+      limparEscolha();
+      atualizar();
+      renderMinhas();
+    };
+
+    document.getElementById("modalVer").onclick = () => { modal.classList.remove("aberto"); trocarAba("abaMinhas"); };
+    document.getElementById("modalFechar").onclick = () => modal.classList.remove("aberto");
+    modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("aberto"); });
+
+    /* ----- Minhas consultas ----- */
+    function renderMinhas() {
+      const lista = document.getElementById("listaConsultas");
+      const minhas = lerConsultas()
+        .filter(c => c.email === usuarioAtual.email)
+        .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+
+      document.getElementById("contador").textContent = minhas.filter(c => !horarioPassado(c.data, c.hora)).length;
+
+      if (!minhas.length) {
+        lista.innerHTML = `<div class="vazio">
+            <span class="emoji">📭</span>
+            Você ainda não tem consultas marcadas.<br>
+            <button type="button" class="botao" data-ir-agendar>Agendar agora</button>
+          </div>`;
+        return;
+      }
+
+      lista.innerHTML = minhas.map(c => {
+        const m = medicos.find(x => x.id === c.medicoId);
+        const dt = dataDe(c.data);
+        const passada = horarioPassado(c.data, c.hora);
+        return `<div class="consulta ${passada ? "passada" : ""}">
+                  <div class="consulta-data">
+                    <small>${DIAS_SEMANA[dt.getDay()]}</small>
+                    <strong>${String(dt.getDate()).padStart(2, "0")}</strong>
+                    <small>${MESES[dt.getMonth()]}</small>
+                  </div>
+                  <div class="consulta-info">
+                    <strong>${m.nome}</strong>
+                    ${m.esp} · ${m.crm} · 🕒 ${c.hora}<br>
+                    <span class="status">${passada ? "Realizada" : "Confirmada"}</span>
+                  </div>
+                  ${passada ? "" : `<button type="button" class="btn-cancelar" data-cancelar="${c.id}">Cancelar</button>`}
+                </div>`;
+      }).join("");
+    }
+
+    document.getElementById("listaConsultas").addEventListener("click", e => {
+      if (e.target.closest("[data-ir-agendar]")) return trocarAba("abaAgendar");
+
+      const b = e.target.closest("[data-cancelar]");
+      if (!b) return;
+      if (!confirm("Deseja mesmo cancelar esta consulta?")) return;
+      salvarConsultas(lerConsultas().filter(c => c.id !== Number(b.dataset.cancelar)));
+      renderMinhas();
+      atualizar();
+    });
+
+    /* ----- Abas da área do paciente ----- */
+    function trocarAba(id) {
+      document.querySelectorAll(".aba-app").forEach(a => a.classList.toggle("ativa", a.id === id));
+      document.querySelectorAll(".menu button").forEach(b => b.classList.toggle("ativo", b.dataset.aba === id));
+    }
+    document.querySelectorAll(".menu button").forEach(b => b.onclick = () => trocarAba(b.dataset.aba));
+
+    /* ----- Entrar e sair da área do paciente ----- */
+    function abrirApp(u) {
+      usuarioAtual = u;
       const primeiroNome = u.nome.split(" ")[0];
       document.getElementById("saudacao").textContent = "Olá, " + primeiroNome + "! 👋";
       document.getElementById("avatar").textContent = primeiroNome.charAt(0).toUpperCase();
@@ -686,11 +1315,19 @@
       document.getElementById("pNascimento").textContent = u.nascimento.split("-").reverse().join("/");
       document.getElementById("pTelefone").textContent = u.telefone;
       document.getElementById("pEmail").textContent = u.email;
-      mostrar("painel");
+
+      limparEscolha();
+      atualizar();
+      renderMinhas();
+      trocarAba("abaAgendar");
+      container.classList.add("logado");
+      window.scrollTo(0, 0);
     }
 
     document.getElementById("sair").onclick = () => {
       try { localStorage.removeItem("vs_logado"); } catch (e) {}
+      usuarioAtual = null;
+      container.classList.remove("logado");
       mostrar("login");
     };
 
@@ -702,7 +1339,7 @@
     try {
       const logado = localStorage.getItem("vs_logado");
       const u = lerUsuarios().find(x => x.email === logado);
-      if (u) abrirPainel(u);
+      if (u) abrirApp(u);
     } catch (e) {}
   </script>
 </body>
