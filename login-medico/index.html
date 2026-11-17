@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VidaSaúde | Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ================= CORES ================= */
+    :root {
+      --verde-escuro: #0f5132;
+      --verde: #16a34a;
+      --verde-medio: #22c55e;
+      --verde-claro: #dcfce7;
+      --verde-agua: #ecfdf5;
+      --branco: #ffffff;
+      --texto: #1e293b;
+      --texto-claro: #64748b;
+      --borda: #d1e7dd;
+      --erro: #dc2626;
+      --sombra: 0 25px 60px rgba(15, 81, 50, 0.18);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      color: var(--texto);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 16px;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(34, 197, 94, 0.18) 0, transparent 35%),
+        radial-gradient(circle at 90% 80%, rgba(22, 163, 74, 0.15) 0, transparent 35%),
+        var(--verde-agua);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Cruzes decorativas no fundo */
+    .cruz-fundo {
+      position: fixed;
+      color: rgba(22, 163, 74, 0.12);
+      font-size: 60px;
+      font-weight: 700;
+      z-index: 0;
+      animation: flutuar 6s ease-in-out infinite;
+    }
+    .cruz-fundo.c1 { top: 8%;  left: 6%; }
+    .cruz-fundo.c2 { bottom: 10%; left: 12%; font-size: 40px; animation-delay: 1s; }
+    .cruz-fundo.c3 { top: 12%; right: 8%; font-size: 46px; animation-delay: 2s; }
+    .cruz-fundo.c4 { bottom: 6%; right: 5%; animation-delay: 3s; }
+
+    @keyframes flutuar {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-14px); }
+    }
+
+    /* ================= CONTAINER ================= */
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      width: 100%;
+      max-width: 1050px;
+      min-height: 640px;
+      background: var(--branco);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+    }
+
+    /* ================= LADO DA IMAGEM ================= */
+    .lado-imagem {
+      flex: 1;
+      position: relative;
+      background-color: var(--verde);
+      background-image: url("https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=900&q=80");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .overlay {
+      height: 100%;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: var(--branco);
+      background: linear-gradient(160deg,
+        rgba(15, 81, 50, 0.92) 0%,
+        rgba(22, 163, 74, 0.80) 55%,
+        rgba(34, 197, 94, 0.70) 100%);
+    }
+
+    .logo { display: flex; align-items: center; gap: 12px; font-size: 1.5rem; font-weight: 700; }
+    .logo-icone {
+      width: 46px; height: 46px;
+      display: grid; place-items: center;
+      background: var(--branco);
+      border-radius: 14px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .texto-imagem h1 { font-size: 2.1rem; line-height: 1.2; margin-bottom: 12px; }
+    .texto-imagem p  { font-weight: 300; opacity: 0.95; }
+
+    /* Linha de batimento cardíaco animada */
+    .batimento { width: 100%; height: 60px; margin: 20px 0; }
+    .batimento path {
+      fill: none;
+      stroke: var(--branco);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      animation: pulso 3s linear infinite;
+    }
+    @keyframes pulso { to { stroke-dashoffset: 0; } }
+
+    .cards-saude { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card-saude {
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 0.78rem;
+      transition: transform 0.3s;
+    }
+    .card-saude:hover { transform: translateY(-4px); }
+    .card-saude svg { width: 30px; height: 30px; margin-bottom: 6px; }
+    .card-saude strong { display: block; font-size: 1.1rem; }
+
+    /* ================= LADO DO FORMULÁRIO ================= */
+    .lado-form {
+      flex: 1.1;
+      padding: 40px 45px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Abas Entrar / Cadastrar */
+    .abas {
+      position: relative;
+      display: flex;
+      background: var(--verde-agua);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 5px;
+      margin-bottom: 26px;
+    }
+    .aba {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+      border: none;
+      background: none;
+      padding: 11px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--texto-claro);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .aba.ativa { color: var(--branco); }
+    .indicador {
+      position: absolute;
+      top: 5px; left: 5px;
+      width: calc(50% - 5px);
+      height: calc(100% - 10px);
+      background: linear-gradient(135deg, var(--verde), var(--verde-medio));
+      border-radius: 10px;
+      box-shadow: 0 6px 14px rgba(22, 163, 74, 0.35);
+      transition: transform 0.35s ease;
+    }
+    .abas.cadastro .indicador { transform: translateX(100%); }
+
+    .titulo h2 { font-size: 1.7rem; color: var(--verde-escuro); }
+    .titulo p  { color: var(--texto-claro); font-size: 0.92rem; margin-bottom: 22px; }
+
+    .formulario { display: none; animation: aparecer 0.4s ease; }
+    .formulario.ativo { display: block; }
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grade organizada dos campos */
+    .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+    .inteiro { grid-column: 1 / -1; }
+
+    .campo { margin-bottom: 14px; }
+    .campo label { display: block; font-size: 0.82rem; font-weight: 500; margin-bottom: 6px; }
+
+    .input-icone { position: relative; }
+    .input-icone svg {
+      position: absolute;
+      left: 13px; top: 50%;
+      transform: translateY(-50%);
+      width: 18px; height: 18px;
+      stroke: var(--verde);
+      pointer-events: none;
+    }
+    .input-icone input {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.92rem;
+      padding: 12px 14px 12px 42px;
+      border: 1.5px solid var(--borda);
+      border-radius: 12px;
+      background: #f7fdf9;
+      color: var(--texto);
+      outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+    .input-icone input:focus {
+      border-color: var(--verde-medio);
+      background: var(--branco);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+    }
+    .input-icone input.invalido { border-color: var(--erro); }
+
+    .ver-senha {
+      position: absolute;
+      right: 10px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--verde);
+      font-family: inherit;
+    }
+
+    .opcoes {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.83rem;
+      margin: 4px 0 22px;
+    }
+    .check { display: flex; align-items: center; gap: 8px; color: var(--texto-claro); cursor: pointer; font-size: 0.83rem; }
+    .check input { accent-color: var(--verde); width: 16px; height: 16px; }
+
+    a, .link {
+      color: var(--verde);
+      font-weight: 600;
+      text-decoration: none;
+      background: none; border: none;
+      font-family: inherit; font-size: inherit;
+      cursor: pointer;
+    }
+    a:hover, .link:hover { text-decoration: underline; }
+
+    .botao {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--branco);
+      background: linear-gradient(135deg, var(--verde) 0%, var(--verde-medio) 100%);
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(22, 163, 74, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .botao:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(22, 163, 74, 0.45); }
+    .botao.secundario {
+      background: var(--branco);
+      color: var(--verde);
+      border: 1.5px solid var(--verde);
+      box-shadow: none;
+      margin-top: 12px;
+    }
+
+    .rodape-form { text-align: center; margin-top: 18px; font-size: 0.88rem; color: var(--texto-claro); }
+
+    .mensagem {
+      display: none;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+    .mensagem.erro    { display: block; background: #fee2e2; color: var(--erro); }
+    .mensagem.sucesso { display: block; background: var(--verde-claro); color: var(--verde-escuro); }
+
+    /* ================= PAINEL APÓS O LOGIN ================= */
+    .painel { display: none; animation: aparecer 0.4s ease; }
+    .painel.ativo { display: block; }
+
+    .avatar {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--verde), var(--verde-medio));
+      color: var(--branco);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 22px rgba(22, 163, 74, 0.35);
+    }
+
+    .tabela {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 18px 0 8px;
+      font-size: 0.9rem;
+    }
+    .tabela th, .tabela td { padding: 12px 16px; text-align: left; }
+    .tabela th { width: 40%; background: var(--verde-agua); color: var(--verde-escuro); font-weight: 600; }
+    .tabela tr:not(:last-child) th,
+    .tabela tr:not(:last-child) td { border-bottom: 1px solid var(--borda); }
+
+    /* ================= RESPONSIVO ================= */
+    @media (max-width: 860px) {
+      .container { flex-direction: column; }
+      .lado-imagem { min-height: 300px; }
+      .texto-imagem h1 { font-size: 1.6rem; }
+    }
+    @media (max-width: 520px) {
+      .overlay, .lado-form { padding: 26px 20px; }
+      .grade { grid-template-columns: 1fr; }
+      .cards-saude { display: none; }
+      .opcoes { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <span class="cruz-fundo c1">✚</span>
+  <span class="cruz-fundo c2">✚</span>
+  <span class="cruz-fundo c3">✚</span>
+  <span class="cruz-fundo c4">✚</span>
+
+  <main class="container">
+
+    <!-- ========== LADO ESQUERDO ========== -->
+    <section class="lado-imagem">
+      <div class="overlay">
+        <div class="logo">
+          <span class="logo-icone">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="#16a34a"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z"/></svg>
+          </span>
+          VidaSaúde
+        </div>
+
+        <div class="texto-imagem">
+          <h1>Sua saúde em boas mãos 💚</h1>
+          <p>Agende consultas, acompanhe seus exames e cuide do seu bem-estar em um só lugar.</p>
+
+          <svg class="batimento" viewBox="0 0 400 60" preserveAspectRatio="none">
+            <path d="M0 30 H120 L140 30 L155 8 L170 52 L185 18 L198 30 H260 L272 22 L282 38 L292 30 H400"/>
+          </svg>
+
+          <div class="cards-saude">
+            <div class="card-saude">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              <strong>+30</strong>especialidades
+            </div>
+            <div class="card-saude">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6 6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
+              <strong>+120</strong>médicos
+            </div>
+            <div class="card-saude">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <strong>24h</strong>agendamento
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== LADO DIREITO ========== -->
+    <section class="lado-form">
+
+      <!-- Abas -->
+      <div class="abas" id="abas">
+        <span class="indicador"></span>
+        <button class="aba ativa" id="abaLogin" type="button">Entrar</button>
+        <button class="aba" id="abaCadastro" type="button">Cadastrar</button>
+      </div>
+
+      <!-- ===== FORMULÁRIO DE LOGIN ===== -->
+      <form class="formulario ativo" id="formLogin" novalidate>
+        <div class="titulo">
+          <h2>Bem-vindo de volta!</h2>
+          <p>Entre com seus dados para acessar sua conta.</p>
+        </div>
+
+        <div class="mensagem" id="msgLogin"></div>
+
+        <div class="campo">
+          <label for="loginEmail">E-mail</label>
+          <div class="input-icone">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+            <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="loginSenha">Senha</label>
+          <div class="input-icone">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="loginSenha" placeholder="Digite sua senha">
+            <button type="button" class="ver-senha" data-alvo="loginSenha">Mostrar</button>
+          </div>
+        </div>
+
+        <div class="opcoes">
+          <label class="check"><input type="checkbox" id="lembrar"> Lembrar de mim</label>
+          <button type="button" class="link" id="esqueci">Esqueci a senha</button>
+        </div>
+
+        <button type="submit" class="botao">Entrar</button>
+
+        <p class="rodape-form">Ainda não tem conta? <button type="button" class="link" id="irCadastro">Cadastre-se</button></p>
+      </form>
+
+      <!-- ===== FORMULÁRIO DE CADASTRO ===== -->
+      <form class="formulario" id="formCadastro" novalidate>
+        <div class="titulo">
+          <h2>Crie sua conta</h2>
+          <p>Leva menos de 1 minuto. 🌿</p>
+        </div>
+
+        <div class="mensagem" id="msgCadastro"></div>
+
+        <div class="grade">
+          <div class="campo inteiro">
+            <label for="cadNome">Nome completo</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="cadNome" placeholder="Maria da Silva">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadCpf">CPF</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 10h4M6 14h8"/></svg>
+              <input type="text" id="cadCpf" placeholder="000.000.000-00" maxlength="14" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadNascimento">Nascimento</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <input type="date" id="cadNascimento">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadTelefone">Telefone</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+              <input type="tel" id="cadTelefone" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadEmail">E-mail</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+              <input type="email" id="cadEmail" placeholder="seuemail@exemplo.com">
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadSenha">Senha</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="cadSenha" placeholder="Mín. 6 caracteres">
+              <button type="button" class="ver-senha" data-alvo="cadSenha">Mostrar</button>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="cadConfirmar">Confirmar senha</label>
+            <div class="input-icone">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              <input type="password" id="cadConfirmar" placeholder="Repita a senha">
+            </div>
+          </div>
+        </div>
+
+        <label class="check" style="margin: 6px 0 20px;">
+          <input type="checkbox" id="cadTermos"> Aceito os <a href="#">termos de uso</a>
+        </label>
+
+        <button type="submit" class="botao">Criar conta</button>
+
+        <p class="rodape-form">Já tem conta? <button type="button" class="link" id="irLogin">Entrar</button></p>
+      </form>
+
+      <!-- ===== PAINEL DO USUÁRIO (após login) ===== -->
+      <div class="painel" id="painel">
+        <div class="avatar" id="avatar">M</div>
+        <div class="titulo">
+          <h2 id="saudacao">Olá!</h2>
+          <p>Você está conectado. Confira seus dados:</p>
+        </div>
+
+        <table class="tabela">
+          <tr><th>Nome</th><td id="pNome"></td></tr>
+          <tr><th>CPF</th><td id="pCpf"></td></tr>
+          <tr><th>Nascimento</th><td id="pNascimento"></td></tr>
+          <tr><th>Telefone</th><td id="pTelefone"></td></tr>
+          <tr><th>E-mail</th><td id="pEmail"></td></tr>
+        </table>
+
+        <button type="button" class="botao" onclick="alert('Em breve: agendamento de consultas! 🩺')">Agendar consulta</button>
+        <button type="button" class="botao secundario" id="sair">Sair</button>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    /* ================= ARMAZENAMENTO (no navegador) ================= */
+    function lerUsuarios() {
+      try { return JSON.parse(localStorage.getItem("vs_usuarios")) || []; }
+      catch (e) { return []; }
+    }
+    function salvarUsuarios(lista) {
+      try { localStorage.setItem("vs_usuarios", JSON.stringify(lista)); } catch (e) {}
+    }
+
+    /* ================= ELEMENTOS ================= */
+    const abas = document.getElementById("abas");
+    const abaLogin = document.getElementById("abaLogin");
+    const abaCadastro = document.getElementById("abaCadastro");
+    const formLogin = document.getElementById("formLogin");
+    const formCadastro = document.getElementById("formCadastro");
+    const painel = document.getElementById("painel");
+
+    /* ================= TROCAR ENTRE LOGIN E CADASTRO ================= */
+    function mostrar(tela) {
+      [formLogin, formCadastro, painel].forEach(el => el.classList.remove("ativo"));
+      abas.style.display = tela === "painel" ? "none" : "flex";
+      limparMensagens();
+
+      if (tela === "login") {
+        formLogin.classList.add("ativo");
+        abas.classList.remove("cadastro");
+        abaLogin.classList.add("ativa");
+        abaCadastro.classList.remove("ativa");
+      } else if (tela === "cadastro") {
+        formCadastro.classList.add("ativo");
+        abas.classList.add("cadastro");
+        abaCadastro.classList.add("ativa");
+        abaLogin.classList.remove("ativa");
+      } else {
+        painel.classList.add("ativo");
+      }
+    }
+
+    abaLogin.onclick = () => mostrar("login");
+    abaCadastro.onclick = () => mostrar("cadastro");
+    document.getElementById("irCadastro").onclick = () => mostrar("cadastro");
+    document.getElementById("irLogin").onclick = () => mostrar("login");
+
+    /* ================= MENSAGENS ================= */
+    function mensagem(id, texto, tipo) {
+      const el = document.getElementById(id);
+      el.textContent = texto;
+      el.className = "mensagem " + tipo;
+    }
+    function limparMensagens() {
+      document.querySelectorAll(".mensagem").forEach(m => m.className = "mensagem");
+      document.querySelectorAll(".invalido").forEach(i => i.classList.remove("invalido"));
+    }
+    function marcarErro(id) { document.getElementById(id).classList.add("invalido"); }
+
+    /* ================= MOSTRAR / OCULTAR SENHA ================= */
+    document.querySelectorAll(".ver-senha").forEach(botao => {
+      botao.onclick = () => {
+        const input = document.getElementById(botao.dataset.alvo);
+        const oculto = input.type === "password";
+        input.type = oculto ? "text" : "password";
+        botao.textContent = oculto ? "Ocultar" : "Mostrar";
+      };
+    });
+
+    /* ================= MÁSCARAS DE CPF E TELEFONE ================= */
+    document.getElementById("cadCpf").addEventListener("input", e => {
+      let v = e.target.value.replace(/\D/g, "").slice(0, 11);
+      v = v.replace(/(\d{3})(\d)/, "$1.$2")
+           .replace(/(\d{3})(\d)/, "$1.$2")
+           .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      e.target.value = v;
+    });
+
+    document.getElementById("cadTelefone").addEventListener("input", e => {
+      let v = e.target.value.replace(/\D/g, "").slice(0, 11);
+      v = v.replace(/^(\d{2})(\d)/, "($1) $2")
+           .replace(/(\d{5})(\d{1,4})$/, "$1-$2");
+      e.target.value = v;
+    });
+
+    /* ================= CADASTRO ================= */
+    formCadastro.addEventListener("submit", e => {
+      e.preventDefault();
+      limparMensagens();
+
+      const usuario = {
+        nome: document.getElementById("cadNome").value.trim(),
+        cpf: document.getElementById("cadCpf").value.trim(),
+        nascimento: document.getElementById("cadNascimento").value,
+        telefone: document.getElementById("cadTelefone").value.trim(),
+        email: document.getElementById("cadEmail").value.trim().toLowerCase(),
+        senha: document.getElementById("cadSenha").value
+      };
+      const confirmar = document.getElementById("cadConfirmar").value;
+      const termos = document.getElementById("cadTermos").checked;
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(usuario.email);
+
+      if (usuario.nome.split(" ").length < 2) { marcarErro("cadNome"); return mensagem("msgCadastro", "Digite seu nome completo.", "erro"); }
+      if (usuario.cpf.length !== 14)          { marcarErro("cadCpf"); return mensagem("msgCadastro", "CPF incompleto.", "erro"); }
+      if (!usuario.nascimento)                { marcarErro("cadNascimento"); return mensagem("msgCadastro", "Informe sua data de nascimento.", "erro"); }
+      if (usuario.telefone.length < 14)       { marcarErro("cadTelefone"); return mensagem("msgCadastro", "Telefone incompleto.", "erro"); }
+      if (!emailValido)                       { marcarErro("cadEmail"); return mensagem("msgCadastro", "E-mail inválido.", "erro"); }
+      if (usuario.senha.length < 6)           { marcarErro("cadSenha"); return mensagem("msgCadastro", "A senha precisa ter pelo menos 6 caracteres.", "erro"); }
+      if (usuario.senha !== confirmar)        { marcarErro("cadConfirmar"); return mensagem("msgCadastro", "As senhas não coincidem.", "erro"); }
+      if (!termos)                            { return mensagem("msgCadastro", "Você precisa aceitar os termos de uso.", "erro"); }
+
+      const usuarios = lerUsuarios();
+      if (usuarios.some(u => u.email === usuario.email)) { marcarErro("cadEmail"); return mensagem("msgCadastro", "Este e-mail já está cadastrado.", "erro"); }
+      if (usuarios.some(u => u.cpf === usuario.cpf))     { marcarErro("cadCpf"); return mensagem("msgCadastro", "Este CPF já está cadastrado.", "erro"); }
+
+      usuarios.push(usuario);
+      salvarUsuarios(usuarios);
+      formCadastro.reset();
+
+      mostrar("login");
+      document.getElementById("loginEmail").value = usuario.email;
+      mensagem("msgLogin", "Conta criada com sucesso! Agora é só entrar. ✅", "sucesso");
+    });
+
+    /* ================= LOGIN ================= */
+    formLogin.addEventListener("submit", e => {
+      e.preventDefault();
+      limparMensagens();
+
+      const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+      const senha = document.getElementById("loginSenha").value;
+
+      if (!email || !senha) return mensagem("msgLogin", "Preencha e-mail e senha.", "erro");
+
+      const usuario = lerUsuarios().find(u => u.email === email && u.senha === senha);
+      if (!usuario) {
+        marcarErro("loginEmail"); marcarErro("loginSenha");
+        return mensagem("msgLogin", "E-mail ou senha incorretos.", "erro");
+      }
+
+      if (document.getElementById("lembrar").checked) {
+        try { localStorage.setItem("vs_logado", email); } catch (e) {}
+      }
+      formLogin.reset();
+      abrirPainel(usuario);
+    });
+
+    /* ================= PAINEL ================= */
+    function abrirPainel(u) {
+      const primeiroNome = u.nome.split(" ")[0];
+      document.getElementById("saudacao").textContent = "Olá, " + primeiroNome + "! 👋";
+      document.getElementById("avatar").textContent = primeiroNome.charAt(0).toUpperCase();
+      document.getElementById("pNome").textContent = u.nome;
+      document.getElementById("pCpf").textContent = u.cpf;
+      document.getElementById("pNascimento").textContent = u.nascimento.split("-").reverse().join("/");
+      document.getElementById("pTelefone").textContent = u.telefone;
+      document.getElementById("pEmail").textContent = u.email;
+      mostrar("painel");
+    }
+
+    document.getElementById("sair").onclick = () => {
+      try { localStorage.removeItem("vs_logado"); } catch (e) {}
+      mostrar("login");
+    };
+
+    document.getElementById("esqueci").onclick = () => {
+      mensagem("msgLogin", "Entre em contato com a clínica pelo (00) 0000-0000 para redefinir sua senha.", "sucesso");
+    };
+
+    /* ================= "LEMBRAR DE MIM" ================= */
+    try {
+      const logado = localStorage.getItem("vs_logado");
+      const u = lerUsuarios().find(x => x.email === logado);
+      if (u) abrirPainel(u);
+    } catch (e) {}
+  </script>
+</body>
+</html>
